@@ -72,15 +72,15 @@ data.forEach(row => {
     // Adicionar um slide com a imagem de fundo
     const slide = presentation.addSlide();
     slide.addImage({
-        path: 'certificado.jpg', // Ajuste o caminho da imagem
+        path: 'certificado.jpg', 
         x: 0,
         y: 0,
-        w: '100%', // Largura 100%
-        h: '100%', // Altura 100%
-        sizing: { type: 'contain', w: '100%', h: '100%' } // Ajusta a imagem para caber
+        w: '100%',
+        h: '100%', 
+        sizing: { type: 'contain', w: '100%', h: '100%' } 
     });
 
-    // Substituir variáveis no modelo de certificado
+    // Substituir as varaiaveis criadas
     const textoCertificado = modeloCertificado
         .replace('{NOME_DO_PARTICIPANTE}', nomeParticipante)
         .replace('{CPF_PARTICIPANTE}', cpfParticipanteFormatado)
@@ -90,10 +90,10 @@ data.forEach(row => {
         .replace('{NOME_EMPRESA}', nomeEmpresa)
         .replace('{ENDERECO_EMPRESA}', enderecoEmpresa);
 
-    // Adicionar texto sobre a imagem
+    //Ajustar o texto e a fonte correta
     slide.addText(textoCertificado, { x: '12%', y: '50%', fontFace: 'Arial', fontSize: 14, color: '363636', align: 'center', valign: 'middle' });
 
-    // Salvar a apresentação
+    // Salvar o certificado
     const filePath = `Certificado_${nomeParticipante}.pptx`;
     presentation.writeFile(filePath, () => {
         console.log(`Arquivo salvo: ${filePath}`);
