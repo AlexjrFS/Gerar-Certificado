@@ -31,7 +31,7 @@ function formatarCPF(cpf) {
         return cpf;
     }
 
-    // Limpar CPF
+    // Formatação CPF
     const cpfLimpo = cpf.replace(/\D/g, '');
 
     // Adicionar pontos e traço
@@ -43,21 +43,21 @@ function formatarCPF(cpf) {
 
 // Iterar sobre os CPFs e formatá-los
 const cpfsFormatados = cpfs.map(formatarCPF);
-
-// Agora, `cpfsFormatados` contém os CPFs formatados
 console.log(cpfsFormatados);
 
 // Modelo de texto do certificado
-const modeloCertificado = "Certificamos para todos os fins que {NOME_DO_PARTICIPANTE}, portador(a) do CPF: {CPF_PARTICIPANTE}, concluiu o curso {NOME_CURSO}, realizado no dia {DATA_CURSO}, com carga horária de {CARGA_HORARIA} horas e conteúdo programático relacionado no verso, promovido nas dependências da empresa {NOME_EMPRESA}, {ENDERECO_EMPRESA}.";
+const modeloCertificado = "Certifico que {NOME_DO_PARTICIPANTE}, portador(a) do CPF: {CPF_PARTICIPANTE}, patrocinado pela {NOME_EMPRESA}, participou e foi aprovado no treinamento de {NOME_CURSO},  com carga horária de {CARGA_HORARIA}, realizado no dia {DATA_CURSO}, ministrado pelo Engenheiro de Segurança do Trabalho, {ENGENHEIRO}, CREA/ SP – 5.061.417.650 .";
+const dataEstado = "São Paulo, {DATA_CURSO} ";
 
 // Iterar sobre os dados e criar certificados em PowerPoint
 data.forEach(row => {
+     const presentation = new pptxgen();
     const nomeParticipante = row['Nome'];
     const cpfParticipante = typeof row['CPF'] === 'string' ? formatarCPF(row['CPF'].trim()) : row['CPF'];
     const nomeCurso = row['Nome do Curso'];
     const cargaHoraria = row['Carga Horária'];
     const nomeEmpresa = row['Nome da Empresa'];
-    const enderecoEmpresa = row['Endereço da Empresa'];
+    const Engenheiro = row['Engenheiro'];
     const cpfParticipanteFormatado = formatarCPF(cpfParticipante);
     const dataCursoExcel = row['Data do Curso'];
 
@@ -67,12 +67,12 @@ data.forEach(row => {
         ? moment("1900-01-01").add(dataCursoNumerica, 'days').format('DD/MM/YYYY')
         : 'data não informada';
     // Criar uma apresentação em branco
-    const presentation = new pptxgen();
+   
 
     // Adicionar um slide com a imagem de fundo
     const slide = presentation.addSlide();
     slide.addImage({
-        path: 'certificado.jpg', 
+        path: 'CertificadosNR35.png', 
         x: 0,
         y: 0,
         w: '100%',
@@ -88,11 +88,23 @@ data.forEach(row => {
         .replace('{DATA_CURSO}', dataCursoFormatada)
         .replace('{CARGA_HORARIA}', cargaHoraria)
         .replace('{NOME_EMPRESA}', nomeEmpresa)
-        .replace('{ENDERECO_EMPRESA}', enderecoEmpresa);
+        .replace('{ENGENHEIRO}', Engenheiro);
 
     //Ajustar o texto e a fonte correta
-    slide.addText(textoCertificado, { x: '12%', y: '50%', fontFace: 'Arial', fontSize: 14, color: '363636', align: 'center', valign: 'middle' });
+    slide.addText(textoCertificado, { x: '12%', y: '43%', fontFace: 'Arial', fontSize: 13, color: '363636', align: 'left', valign: 'middle', charSpacing: 1 });
 
+    const textoSimples = dataEstado
+    .replace('{DATA_CURSO}', dataCursoFormatada);
+    slide.addText(textoSimples, { x: '37%', y: '57%', fontFace: 'Arial', fontSize: 12.5, color: '363636', align: 'center', valign: 'middle', charSpacing: 1 });
+
+    const slideConteudoProgramatico = presentation.addSlide();
+    slideConteudoProgramatico.addImage({
+        path: 'NR35_ContProg.png',  
+        x: 0, 
+        y: 0, 
+        w: '100%', 
+        h: '100%', 
+        sizing: { type: 'contain', w: '100%', h: '100%' }})
     // Salvar o certificado
     const filePath = `Certificado_${nomeParticipante}.pptx`;
     presentation.writeFile(filePath, () => {
