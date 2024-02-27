@@ -30,7 +30,6 @@ function formatarCPF(cpf) {
         // Se não for uma string, retornar o CPF original
         return cpf;
     }
-
     // Formatação CPF
     const cpfLimpo = cpf.replace(/\D/g, '');
 
@@ -104,7 +103,9 @@ data.forEach(row => {
         y: 0, 
         w: '100%', 
         h: '100%', 
-        sizing: { type: 'contain', w: '100%', h: '100%' }})
+        sizing: { type: 'contain', w: '100%', h: '100%' }
+    })
+
     // Salvar o certificado
     const filePath = `Certificado_${nomeParticipante}.pptx`;
     presentation.writeFile(filePath, () => {
