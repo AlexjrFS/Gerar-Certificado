@@ -7,11 +7,11 @@ const workbook = xlsx.readFile('dados_certificados.xlsx',{cellText: false});
 const sheet = workbook.Sheets[workbook.SheetNames[0]];
 const data = xlsx.utils.sheet_to_json(sheet);
 const colunaCPF = sheet['B'];
-// Inicializar um array para armazenar os CPFs
+// Inicializa um array para armazenar os CPFs
 const cpfs = [];
 // Iterar sobre as células da coluna "CPF" e extrair os valores
 for(const celula in colunaCPF){
-    if(celula.startsWith('B') && colunaCPF.hasOwnProperty(celula)) {
+    if(celula.startsWith('B') && colunaCPF.hasOwnProperty(celula)){
         const valorCPF = colunaCPF[celula].v;
         // Adicionar o CPF ao array
         cpfs.push(valorCPF);
@@ -19,7 +19,7 @@ for(const celula in colunaCPF){
 }
 function formatarCPF(cpf){
     // Verificar se o CPF é uma string
-    if (typeof cpf !== 'string') {
+    if(typeof cpf !== 'string'){
         // Se não for uma string, retornar o CPF original
         return cpf;
     }
@@ -37,7 +37,7 @@ const modeloCertificado = "Certifico que {NOME_DO_PARTICIPANTE}, portador(a) do 
 const dataEstado = "São Paulo, {DATA_CURSO} ";
 // Iterar sobre os dados e criar certificados em PowerPoint
 data.forEach(row =>{
-     const presentation = new pptxgen();
+    const presentation = new pptxgen();
     const nomeParticipante = row['Nome'];
     const cpfParticipante = typeof row['CPF'] === 'string' ? formatarCPF(row['CPF'].trim()) : row['CPF'];
     const nomeCurso = row['Nome do Curso'];
@@ -67,7 +67,8 @@ data.forEach(row =>{
         .replace('{NOME_EMPRESA}', nomeEmpresa)
         .replace('{ENGENHEIRO}', Engenheiro);
     // Ajustar o texto e a fonte escolhida
-    slide.addText(textoCertificado,{x:'12%',
+    slide.addText(textoCertificado,{
+        x:'12%',
         y:'43%', 
         fontFace:'Arial', 
         fontSize:13, 
@@ -78,14 +79,15 @@ data.forEach(row =>{
     });
     const textoSimples = dataEstado
     .replace('{DATA_CURSO}', dataCursoFormatada);
-    slide.addText(textoSimples, { x: '37%', 
-        y: '57%', 
-        fontFace: 'Arial', 
-        fontSize: 12.5, 
-        color: '363636', 
-        align: 'center', 
-        valign: 'middle', 
-        charSpacing: 1 
+    slide.addText(textoSimples, {
+        x:'37%', 
+        y:'57%', 
+        fontFace:'Arial', 
+        fontSize:12.5, 
+        color:'363636', 
+        align:'center', 
+        valign:'middle', 
+        charSpacing:1 
     });
     const slideConteudoProgramatico = presentation.addSlide();
     slideConteudoProgramatico.addImage({
